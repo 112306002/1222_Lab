@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roller</title>
+    <style>
+        /* Add your styles here */
+        #probabilityChart {
+            margin-top: 20px;
+            display: none;
+            /* Set initial display property to none */
+        }
+
+        #probabilityChart table {
+            border-collapse: collapse;
+        }
+
+        #probabilityChart th,
+        #probabilityChart td {
+            width: 30px;
+            text-align: center;
+            border: 1px solid #000;
+            padding: 5px;
+        }
+
+        #probabilityChart th {
+            background-color: #eee;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Dice Roller</h1>
+
+    <button id="rollButton">Roll Dice</button>
+
+    <div id="diceContainer"></div>
+    <div id="probabilityChart">
+        <table id="probabilityTable">
+            <tr>
+                <th>Face</th>
+                <th>Percent</th>
+            </tr>
+            <!-- Initial rows for faces with initial count of 0 -->
+            <tr>
+                <td>1</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>0%</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        function start() {
+            var button = document.getElementById("rollButton");
+            button.addEventListener("click", rollDice, false);
+        }
+
+        function rollDice() {
+            var diceContainer = document.getElementById("diceContainer");
+            var probabilityChart = document.getElementById("probabilityChart");
+            var probabilityChartTable = document.getElementById("probabilityTable");
+
+            // Clear previous dice images
+            diceContainer.innerHTML = "";
+
+            // Array to store counts for each face
+            var faceCounts = [0, 0, 0, 0, 0, 0];
+
+            // Roll 12 dice
+            for (var i = 1; i <= 12; i++) {
+                var randomNumber = Math.floor(Math.random() * 6) + 1;
+                faceCounts[randomNumber - 1]++;
+                setImage(i, randomNumber);
+            }
+
+            // Update the probability chart
+            updateProbabilityChart(faceCounts, probabilityChartTable);
+
+            // Show the probability chart
+            probabilityChart.style.display = "block";
+        }
+
+        function setImage(dieNumber, face) {
+            var diceContainer = document.getElementById("diceContainer");
+            var img = document.createElement("img");
+            img.src = "die" + face + ".png";
+            img.alt = "Die " + dieNumber;
+            diceContainer.appendChild(img);
+        }
+
+        function updateProbabilityChart(faceCounts, table) {
+            for (var i = 0; i < faceCounts.length; i++) {
+                var face = i + 1;
+                var count = faceCounts[i];
+                var percent = (count / 12) * 100;
+
+                // Find the row for the face in the table and update the data
+                var row = table.rows[i + 1]; // Start from the second row to update data
+                var cellPercent = row.cells[1];
+                cellPercent.textContent = percent.toFixed(2) + "%";
+            }
+        }
+
+        window.addEventListener("load", start, false);
+    </script>
+
+</body>
+
+</html>
